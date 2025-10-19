@@ -8,6 +8,10 @@ import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AdminBookings from "@/components/admin/AdminBookings";
 import AdminCalendar from "@/components/admin/AdminCalendar";
+import AdminPrices from "@/components/admin/AdminPrices";
+import AdminGallery from "@/components/admin/AdminGallery";
+import AdminStory from "@/components/admin/AdminStory";
+import AdminContacts from "@/components/admin/AdminContacts";
 import { LogOut } from "lucide-react";
 
 const AdminPanel = () => {
@@ -144,9 +148,13 @@ const AdminPanel = () => {
         </div>
 
         <Tabs defaultValue="bookings" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="bookings">Prenotazioni</TabsTrigger>
             <TabsTrigger value="calendar">Calendario</TabsTrigger>
+            <TabsTrigger value="prices">Prezzi</TabsTrigger>
+            <TabsTrigger value="gallery">Galleria</TabsTrigger>
+            <TabsTrigger value="story">Storia</TabsTrigger>
+            <TabsTrigger value="contacts">Contatti</TabsTrigger>
           </TabsList>
 
           <TabsContent value="bookings">
@@ -155,6 +163,22 @@ const AdminPanel = () => {
 
           <TabsContent value="calendar">
             <AdminCalendar />
+          </TabsContent>
+
+          <TabsContent value="prices">
+            <AdminPrices />
+          </TabsContent>
+
+          <TabsContent value="gallery">
+            <AdminGallery />
+          </TabsContent>
+
+          <TabsContent value="story">
+            <AdminStory />
+          </TabsContent>
+
+          <TabsContent value="contacts">
+            <AdminContacts />
           </TabsContent>
         </Tabs>
       </div>

@@ -22,6 +22,12 @@ const Navbar = () => {
             <Link to="/gallery" className="text-foreground hover:text-primary transition-colors">
               Galleria
             </Link>
+            <Link to="/story" className="text-foreground hover:text-primary transition-colors">
+              La Nostra Storia
+            </Link>
+            <Link to="/contact" className="text-foreground hover:text-primary transition-colors">
+              Contatti
+            </Link>
             <Link to="/booking">
               <Button variant="default" className="gradient-ocean">
                 Prenota Ora
@@ -54,6 +60,20 @@ const Navbar = () => {
               className="block py-2 text-foreground hover:text-primary transition-colors"
             >
               Galleria
+            </Link>
+            <Link
+              to="/story"
+              onClick={() => setIsOpen(false)}
+              className="block py-2 text-foreground hover:text-primary transition-colors"
+            >
+              La Nostra Storia
+            </Link>
+            <Link
+              to="/contact"
+              onClick={() => setIsOpen(false)}
+              className="block py-2 text-foreground hover:text-primary transition-colors"
+            >
+              Contatti
             </Link>
             <Link to="/booking" onClick={() => setIsOpen(false)}>
               <Button variant="default" className="w-full gradient-ocean">

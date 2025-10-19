@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 import villaHero from "@/assets/villa-hero.jpg";
 import villaPool from "@/assets/villa-pool.jpg";
 import villaInterior from "@/assets/villa-interior.jpg";
@@ -7,15 +9,47 @@ import villaBedroom from "@/assets/villa-bedroom.jpg";
 import beachView from "@/assets/beach-view.jpg";
 import villaTerrace from "@/assets/villa-terrace.jpg";
 
+interface GalleryImage {
+  id: string;
+  image_url: string;
+  title: string;
+  description: string | null;
+}
+
 const Gallery = () => {
-  const images = [
-    { src: villaHero, title: "Vista Principale", description: "La villa con piscina infinity" },
-    { src: villaPool, title: "Piscina al Tramonto", description: "Relax e panorami mozzafiato" },
-    { src: villaInterior, title: "Living Room", description: "Spazi luminosi e moderni" },
-    { src: villaBedroom, title: "Camera da Letto", description: "Comfort e vista mare" },
-    { src: beachView, title: "La Spiaggia", description: "Acque cristalline del Mediterraneo" },
-    { src: villaTerrace, title: "Terrazza", description: "Cene romantiche sotto le stelle" },
+  const [images, setImages] = useState<GalleryImage[]>([]);
+
+  const defaultImages = [
+    { id: "1", image_url: villaHero, title: "Vista Principale", description: "La villa con piscina infinity" },
+    { id: "2", image_url: villaPool, title: "Piscina al Tramonto", description: "Relax e panorami mozzafiato" },
+    { id: "3", image_url: villaInterior, title: "Living Room", description: "Spazi luminosi e moderni" },
+    { id: "4", image_url: villaBedroom, title: "Camera da Letto", description: "Comfort e vista mare" },
+    { id: "5", image_url: beachView, title: "La Spiaggia", description: "Acque cristalline del Mediterraneo" },
+    { id: "6", image_url: villaTerrace, title: "Terrazza", description: "Cene romantiche sotto le stelle" },
   ];
+
+  useEffect(() => {
+    fetchImages();
+  }, []);
+
+  const fetchImages = async () => {
+    const { data, error } = await supabase
+      .from("gallery_images")
+      .select("*")
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Error fetching images:", error);
+      setImages(defaultImages);
+      return;
+    }
+
+    if (data && data.length > 0) {
+      setImages(data);
+    } else {
+      setImages(defaultImages);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -33,14 +67,14 @@ const Gallery = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {images.map((image, index) => (
+            {images.map((image) => (
               <div
-                key={index}
+                key={image.id}
                 className="group relative overflow-hidden rounded-lg shadow-luxury hover-lift"
               >
                 <div className="aspect-[4/3] overflow-hidden">
                   <img
-                    src={image.src}
+                    src={image.image_url}
                     alt={image.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />

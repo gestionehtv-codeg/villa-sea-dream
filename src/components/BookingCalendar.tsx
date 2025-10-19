@@ -1,7 +1,7 @@
 import { Calendar } from "@/components/ui/calendar";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { addDays, isSameDay, isAfter, isBefore } from "date-fns";
+import { addDays, isSameDay, isAfter, isBefore, format } from "date-fns";
 import { it } from "date-fns/locale";
 
 interface BookingCalendarProps {
@@ -9,13 +9,20 @@ interface BookingCalendarProps {
   onRangeSelect: (range: { from?: Date; to?: Date }) => void;
 }
 
+interface DailyPrice {
+  date: string;
+  price: number;
+}
+
 const BookingCalendar = ({ selectedRange, onRangeSelect }: BookingCalendarProps) => {
   const [unavailableDates, setUnavailableDates] = useState<Date[]>([]);
   const [bookedRanges, setBookedRanges] = useState<Array<{ from: Date; to: Date }>>([]);
+  const [dailyPrices, setDailyPrices] = useState<DailyPrice[]>([]);
 
   useEffect(() => {
     fetchAvailability();
     fetchBookings();
+    fetchDailyPrices();
   }, []);
 
   const fetchAvailability = async () => {
@@ -30,18 +37,37 @@ const BookingCalendar = ({ selectedRange, onRangeSelect }: BookingCalendarProps)
   };
 
   const fetchBookings = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("bookings")
       .select("check_in, check_out")
       .in("status", ["confirmed", "pending"]);
 
+    if (error) {
+      console.error("Error fetching bookings:", error);
+      return;
+    }
+
     if (data) {
-      setBookedRanges(
-        data.map((booking) => ({
-          from: new Date(booking.check_in),
-          to: new Date(booking.check_out),
-        }))
-      );
+      const ranges = data.map((booking) => ({
+        from: new Date(booking.check_in),
+        to: new Date(booking.check_out),
+      }));
+      setBookedRanges(ranges);
+    }
+  };
+
+  const fetchDailyPrices = async () => {
+    const { data, error } = await supabase
+      .from("daily_prices")
+      .select("date, price");
+
+    if (error) {
+      console.error("Error fetching daily prices:", error);
+      return;
+    }
+
+    if (data) {
+      setDailyPrices(data);
     }
   };
 
@@ -81,6 +107,12 @@ const BookingCalendar = ({ selectedRange, onRangeSelect }: BookingCalendarProps)
     onRangeSelect(range);
   };
 
+  const getDayPrice = (date: Date) => {
+    const dateStr = format(date, "yyyy-MM-dd");
+    const priceData = dailyPrices.find(p => p.date === dateStr);
+    return priceData?.price;
+  };
+
   return (
     <Calendar
       mode="range"
@@ -97,6 +129,21 @@ const BookingCalendar = ({ selectedRange, onRangeSelect }: BookingCalendarProps)
           textDecoration: "line-through",
           color: "hsl(var(--muted-foreground))",
           opacity: 0.5,
+        },
+      }}
+      components={{
+        DayContent: ({ date }) => {
+          const price = getDayPrice(date);
+          return (
+            <div className="relative w-full h-full flex flex-col items-center justify-center">
+              <span>{date.getDate()}</span>
+              {price && (
+                <span className="text-xs text-primary font-semibold">
+                  €{price}
+                </span>
+              )}
+            </div>
+          );
         },
       }}
     />

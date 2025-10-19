@@ -104,6 +104,123 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_info: {
+        Row: {
+          address: string
+          created_at: string
+          email: string
+          facebook: string | null
+          id: string
+          instagram: string | null
+          phone: string
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          email: string
+          facebook?: string | null
+          id?: string
+          instagram?: string | null
+          phone: string
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          email?: string
+          facebook?: string | null
+          id?: string
+          instagram?: string | null
+          phone?: string
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      daily_prices: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          price: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      gallery_images: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          image_url: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          image_url: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      story_content: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          image_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
