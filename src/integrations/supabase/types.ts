@@ -194,6 +194,66 @@ export type Database = {
         }
         Relationships: []
       }
+      services: {
+        Row: {
+          created_at: string
+          description: string
+          display_order: number
+          icon_name: string
+          id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          display_order?: number
+          icon_name?: string
+          id?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          display_order?: number
+          icon_name?: string
+          id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_content: {
+        Row: {
+          content_key: string
+          content_value: string
+          created_at: string
+          id: string
+          page: string
+          section: string
+          updated_at: string
+        }
+        Insert: {
+          content_key: string
+          content_value: string
+          created_at?: string
+          id?: string
+          page: string
+          section: string
+          updated_at?: string
+        }
+        Update: {
+          content_key?: string
+          content_value?: string
+          created_at?: string
+          id?: string
+          page?: string
+          section?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       story_content: {
         Row: {
           content: string

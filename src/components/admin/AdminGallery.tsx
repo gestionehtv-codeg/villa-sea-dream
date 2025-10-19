@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Upload } from "lucide-react";
 
 interface GalleryImage {
   id: string;
@@ -23,6 +23,7 @@ const AdminGallery = () => {
     title: "",
     description: "",
   });
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchImages();
@@ -44,9 +45,46 @@ const AdminGallery = () => {
     }
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check if it's an image
+    if (!file.type.startsWith('image/')) {
+      toast.error("Carica solo file immagine");
+      return;
+    }
+
+    setUploading(true);
+    
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('gallery')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('gallery')
+        .getPublicUrl(filePath);
+
+      setNewImage({ ...newImage, image_url: publicUrl });
+      toast.success("Immagine caricata");
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      toast.error("Errore nel caricamento");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleAddImage = async () => {
     if (!newImage.image_url || !newImage.title) {
-      toast.error("Inserisci URL e titolo dell'immagine");
+      toast.error("Inserisci immagine e titolo");
       return;
     }
 
@@ -112,7 +150,33 @@ const AdminGallery = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="image_url">URL Immagine</Label>
+            <Label htmlFor="file_upload">Carica Immagine (JPG, PNG, etc.)</Label>
+            <div className="flex gap-2">
+              <Input
+                id="file_upload"
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                disabled={uploading}
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                disabled={uploading}
+                className="shrink-0"
+              >
+                <Upload className="h-4 w-4" />
+              </Button>
+            </div>
+            {newImage.image_url && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Immagine caricata ✓
+              </p>
+            )}
+          </div>
+          <div>
+            <Label htmlFor="image_url">Oppure URL Immagine</Label>
             <Input
               id="image_url"
               value={newImage.image_url}

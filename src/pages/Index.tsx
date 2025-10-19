@@ -1,14 +1,51 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 import villaHero from "@/assets/villa-hero.jpg";
 import villaPool from "@/assets/villa-pool.jpg";
 import villaInterior from "@/assets/villa-interior.jpg";
-import { Waves, Home, Sparkles, Calendar } from "lucide-react";
+import * as LucideIcons from "lucide-react";
+
+interface Service {
+  id: string;
+  title: string;
+  description: string;
+  icon_name: string;
+  display_order: number;
+}
 
 const Index = () => {
+  const [services, setServices] = useState<Service[]>([]);
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const fetchServices = async () => {
+    const { data, error } = await supabase
+      .from("services")
+      .select("*")
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Error fetching services:", error);
+      return;
+    }
+
+    if (data) {
+      setServices(data);
+    }
+  };
+
+  const getIcon = (iconName: string) => {
+    const Icon = (LucideIcons as any)[iconName] || LucideIcons.Star;
+    return Icon;
+  };
+
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -44,54 +81,23 @@ const Index = () => {
             Lusso & Comfort
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <Card className="hover-lift bg-card border-border">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-secondary/10 flex items-center justify-center">
-                  <Waves className="h-6 w-6 text-secondary" />
-                </div>
-                <h3 className="font-semibold mb-2">Vista Mare</h3>
-                <p className="text-sm text-muted-foreground">
-                  Panorama mozzafiato sul Mediterraneo
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-lift bg-card border-border">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-secondary/10 flex items-center justify-center">
-                  <Home className="h-6 w-6 text-secondary" />
-                </div>
-                <h3 className="font-semibold mb-2">Design Esclusivo</h3>
-                <p className="text-sm text-muted-foreground">
-                  Architettura moderna e minimalista
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-lift bg-card border-border">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-secondary/10 flex items-center justify-center">
-                  <Sparkles className="h-6 w-6 text-secondary" />
-                </div>
-                <h3 className="font-semibold mb-2">Piscina Infinity</h3>
-                <p className="text-sm text-muted-foreground">
-                  Piscina a sfioro con vista oceano
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="hover-lift bg-card border-border">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-secondary/10 flex items-center justify-center">
-                  <Calendar className="h-6 w-6 text-secondary" />
-                </div>
-                <h3 className="font-semibold mb-2">Privacy Totale</h3>
-                <p className="text-sm text-muted-foreground">
-                  Villa esclusiva per il tuo relax
-                </p>
-              </CardContent>
-            </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {services.map((service) => {
+              const Icon = getIcon(service.icon_name);
+              return (
+                <Card key={service.id} className="hover-lift bg-card border-border">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-secondary/10 flex items-center justify-center">
+                      <Icon className="h-6 w-6 text-secondary" />
+                    </div>
+                    <h3 className="font-semibold mb-2">{service.title}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {service.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>

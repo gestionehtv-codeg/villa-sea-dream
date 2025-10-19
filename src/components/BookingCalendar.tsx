@@ -114,13 +114,14 @@ const BookingCalendar = ({ selectedRange, onRangeSelect }: BookingCalendarProps)
   };
 
   return (
-    <Calendar
-      mode="range"
-      selected={selectedRange.from && selectedRange.to ? selectedRange as any : undefined}
-      onSelect={handleSelect}
-      disabled={(date) => isDateUnavailable(date) || isBefore(date, new Date())}
-      locale={it}
-      className="rounded-md border shadow-luxury pointer-events-auto"
+    <div className="w-full">
+      <Calendar
+        mode="range"
+        selected={selectedRange.from && selectedRange.to ? selectedRange as any : undefined}
+        onSelect={handleSelect}
+        disabled={(date) => isDateUnavailable(date) || isBefore(date, new Date())}
+        locale={it}
+        className="rounded-md border shadow-luxury w-full"
       modifiers={{
         unavailable: (date) => isDateUnavailable(date),
       }}
@@ -146,7 +147,8 @@ const BookingCalendar = ({ selectedRange, onRangeSelect }: BookingCalendarProps)
           );
         },
       }}
-    />
+      />
+    </div>
   );
 };
 
