@@ -11,13 +11,62 @@ import { useToast } from "@/hooks/use-toast";
 import { Star } from "lucide-react";
 
 const SubmitReview = () => {
+  const [reviewUrl, setReviewUrl] = useState("");
+  const [isExtracting, setIsExtracting] = useState(false);
   const [formData, setFormData] = useState({
     guest_name: "",
     content: "",
     rating: 5,
+    external_source: "",
+    external_link: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  const handleExtractFromUrl = async () => {
+    if (!reviewUrl) {
+      toast({
+        variant: "destructive",
+        title: "Errore",
+        description: "Inserisci un link alla recensione.",
+      });
+      return;
+    }
+
+    setIsExtracting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('extract-review', {
+        body: { url: reviewUrl },
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        setFormData({
+          guest_name: data.data.guest_name,
+          content: data.data.content,
+          rating: data.data.rating,
+          external_source: data.data.external_source,
+          external_link: data.data.external_link,
+        });
+        toast({
+          title: "Recensione estratta!",
+          description: "I dati sono stati estratti automaticamente.",
+        });
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (error) {
+      console.error('Error extracting review:', error);
+      toast({
+        variant: "destructive",
+        title: "Errore",
+        description: "Impossibile estrarre i dati dalla recensione.",
+      });
+    } finally {
+      setIsExtracting(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +77,8 @@ const SubmitReview = () => {
         guest_name: formData.guest_name,
         content: formData.content,
         rating: formData.rating,
+        external_source: formData.external_source || null,
+        external_link: formData.external_link || null,
         is_published: false, // Needs admin approval
       },
     ]);
@@ -44,7 +95,14 @@ const SubmitReview = () => {
         description:
           "La tua recensione è stata inviata e verrà pubblicata dopo la verifica.",
       });
-      setFormData({ guest_name: "", content: "", rating: 5 });
+      setFormData({ 
+        guest_name: "", 
+        content: "", 
+        rating: 5,
+        external_source: "",
+        external_link: "",
+      });
+      setReviewUrl("");
     }
 
     setIsSubmitting(false);
@@ -65,6 +123,28 @@ const SubmitReview = () => {
               </p>
             </CardHeader>
             <CardContent>
+              <div className="mb-6 p-4 bg-primary/5 rounded-lg border border-primary/10">
+                <h3 className="font-semibold mb-3">Genera recensione da link</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Incolla il link della recensione (Airbnb, Booking.com, ecc.) e i dati verranno estratti automaticamente.
+                </p>
+                <div className="flex gap-2">
+                  <Input
+                    type="url"
+                    placeholder="https://www.airbnb.com/reviews/..."
+                    value={reviewUrl}
+                    onChange={(e) => setReviewUrl(e.target.value)}
+                  />
+                  <Button 
+                    type="button" 
+                    onClick={handleExtractFromUrl}
+                    disabled={isExtracting}
+                  >
+                    {isExtracting ? "Estrazione..." : "Estrai"}
+                  </Button>
+                </div>
+              </div>
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <Label htmlFor="guest_name">Nome</Label>

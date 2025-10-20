@@ -23,6 +23,8 @@ interface Review {
 
 const AdminReviews = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewUrl, setReviewUrl] = useState("");
+  const [isExtracting, setIsExtracting] = useState(false);
   const [newReview, setNewReview] = useState({
     guest_name: "",
     content: "",
@@ -47,6 +49,53 @@ const AdminReviews = () => {
       console.error("Error fetching reviews:", error);
     } else {
       setReviews(data || []);
+    }
+  };
+
+  const handleExtractFromUrl = async () => {
+    if (!reviewUrl) {
+      toast({
+        variant: "destructive",
+        title: "Errore",
+        description: "Inserisci un link alla recensione.",
+      });
+      return;
+    }
+
+    setIsExtracting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('extract-review', {
+        body: { url: reviewUrl },
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        setNewReview({
+          guest_name: data.data.guest_name,
+          content: data.data.content,
+          rating: data.data.rating,
+          external_source: data.data.external_source,
+          external_link: data.data.external_link,
+          is_published: true,
+        });
+        setReviewUrl("");
+        toast({
+          title: "Recensione estratta!",
+          description: "I dati sono stati estratti automaticamente.",
+        });
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (error) {
+      console.error('Error extracting review:', error);
+      toast({
+        variant: "destructive",
+        title: "Errore",
+        description: "Impossibile estrarre i dati dalla recensione.",
+      });
+    } finally {
+      setIsExtracting(false);
     }
   };
 
@@ -143,6 +192,28 @@ const AdminReviews = () => {
           <CardTitle>Aggiungi Nuova Recensione</CardTitle>
         </CardHeader>
         <CardContent>
+          <div className="mb-6 p-4 bg-primary/5 rounded-lg border border-primary/10">
+            <h3 className="font-semibold mb-3">Genera recensione da link</h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Incolla il link della recensione (Airbnb, Booking.com, ecc.) e i dati verranno estratti automaticamente.
+            </p>
+            <div className="flex gap-2">
+              <Input
+                type="url"
+                placeholder="https://www.airbnb.com/reviews/..."
+                value={reviewUrl}
+                onChange={(e) => setReviewUrl(e.target.value)}
+              />
+              <Button 
+                type="button" 
+                onClick={handleExtractFromUrl}
+                disabled={isExtracting}
+              >
+                {isExtracting ? "Estrazione..." : "Estrai"}
+              </Button>
+            </div>
+          </div>
+
           <form onSubmit={handleAddReview} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
