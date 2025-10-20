@@ -21,7 +21,7 @@ const Story = () => {
       .from("story_content")
       .select("*")
       .limit(1)
-      .single();
+      .maybeSingle();
 
     if (error && error.code !== "PGRST116") {
       console.error("Error fetching story:", error);

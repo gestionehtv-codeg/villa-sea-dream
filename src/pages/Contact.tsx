@@ -26,7 +26,7 @@ const Contact = () => {
       .from("contact_info")
       .select("*")
       .limit(1)
-      .single();
+      .maybeSingle();
 
     if (error && error.code !== "PGRST116") {
       console.error("Error fetching contact:", error);

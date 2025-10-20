@@ -117,36 +117,37 @@ const BookingCalendar = ({ selectedRange, onRangeSelect }: BookingCalendarProps)
     <div className="w-full">
       <Calendar
         mode="range"
-        selected={selectedRange.from && selectedRange.to ? selectedRange as any : undefined}
+        selected={selectedRange as any}
         onSelect={handleSelect}
         disabled={(date) => isDateUnavailable(date) || isBefore(date, new Date())}
         locale={it}
         className="rounded-md border shadow-luxury w-full"
-      modifiers={{
-        unavailable: (date) => isDateUnavailable(date),
-      }}
-      modifiersStyles={{
-        unavailable: {
-          textDecoration: "line-through",
-          color: "hsl(var(--muted-foreground))",
-          opacity: 0.5,
-        },
-      }}
-      components={{
-        DayContent: ({ date }) => {
-          const price = getDayPrice(date);
-          return (
-            <div className="relative w-full h-full flex flex-col items-center justify-center">
-              <span>{date.getDate()}</span>
-              {price && (
-                <span className="text-xs text-primary font-semibold">
-                  €{price}
-                </span>
-              )}
-            </div>
-          );
-        },
-      }}
+        numberOfMonths={1}
+        modifiers={{
+          unavailable: (date) => isDateUnavailable(date),
+        }}
+        modifiersStyles={{
+          unavailable: {
+            textDecoration: "line-through",
+            color: "hsl(var(--muted-foreground))",
+            opacity: 0.5,
+          },
+        }}
+        components={{
+          DayContent: ({ date }) => {
+            const price = getDayPrice(date);
+            return (
+              <div className="relative w-full h-full flex flex-col items-center justify-center">
+                <span>{date.getDate()}</span>
+                {price && (
+                  <span className="text-xs text-primary font-semibold">
+                    €{price}
+                  </span>
+                )}
+              </div>
+            );
+          },
+        }}
       />
     </div>
   );
