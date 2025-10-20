@@ -194,6 +194,42 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          content: string
+          created_at: string
+          external_link: string | null
+          external_source: string | null
+          guest_name: string
+          id: string
+          is_published: boolean
+          rating: number
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          external_link?: string | null
+          external_source?: string | null
+          guest_name: string
+          id?: string
+          is_published?: boolean
+          rating: number
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          external_link?: string | null
+          external_source?: string | null
+          guest_name?: string
+          id?: string
+          is_published?: boolean
+          rating?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       services: {
         Row: {
           created_at: string

@@ -25,6 +25,9 @@ const Navbar = () => {
             <Link to="/story" className="text-foreground hover:text-primary transition-colors">
               La Nostra Storia
             </Link>
+            <Link to="/reviews" className="text-foreground hover:text-primary transition-colors">
+              Recensioni
+            </Link>
             <Link to="/contact" className="text-foreground hover:text-primary transition-colors">
               Contatti
             </Link>
@@ -67,6 +70,13 @@ const Navbar = () => {
               className="block py-2 text-foreground hover:text-primary transition-colors"
             >
               La Nostra Storia
+            </Link>
+            <Link
+              to="/reviews"
+              onClick={() => setIsOpen(false)}
+              className="block py-2 text-foreground hover:text-primary transition-colors"
+            >
+              Recensioni
             </Link>
             <Link
               to="/contact"

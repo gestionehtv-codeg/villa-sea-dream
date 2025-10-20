@@ -14,6 +14,7 @@ import AdminStory from "@/components/admin/AdminStory";
 import AdminContacts from "@/components/admin/AdminContacts";
 import AdminServices from "@/components/admin/AdminServices";
 import AdminSiteContent from "@/components/admin/AdminSiteContent";
+import AdminReviews from "@/components/admin/AdminReviews";
 import { LogOut } from "lucide-react";
 
 const AdminPanel = () => {
@@ -150,12 +151,13 @@ const AdminPanel = () => {
         </div>
 
         <Tabs defaultValue="bookings" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-9">
             <TabsTrigger value="bookings">Prenotazioni</TabsTrigger>
             <TabsTrigger value="calendar">Calendario</TabsTrigger>
             <TabsTrigger value="prices">Prezzi</TabsTrigger>
             <TabsTrigger value="gallery">Galleria</TabsTrigger>
             <TabsTrigger value="story">Storia</TabsTrigger>
+            <TabsTrigger value="reviews">Recensioni</TabsTrigger>
             <TabsTrigger value="contacts">Contatti</TabsTrigger>
             <TabsTrigger value="services">Servizi</TabsTrigger>
             <TabsTrigger value="content">Contenuti</TabsTrigger>
@@ -179,6 +181,10 @@ const AdminPanel = () => {
 
           <TabsContent value="story">
             <AdminStory />
+          </TabsContent>
+
+          <TabsContent value="reviews">
+            <AdminReviews />
           </TabsContent>
 
           <TabsContent value="contacts">

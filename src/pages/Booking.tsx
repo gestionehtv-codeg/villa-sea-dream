@@ -7,11 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import { CreditCard, Wallet } from "lucide-react";
 
 const Booking = () => {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ const Booking = () => {
     phone: "",
     guests: "2",
     message: "",
+    payment_method: "credit_card",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -58,6 +61,7 @@ const Booking = () => {
         phone: "",
         guests: "2",
         message: "",
+        payment_method: "credit_card",
       });
       setSelectedRange({});
       
@@ -174,6 +178,61 @@ const Booking = () => {
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Hai richieste particolari? Scrivile qui..."
                     />
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label>Metodo di Pagamento Preferito</Label>
+                    <RadioGroup
+                      value={formData.payment_method}
+                      onValueChange={(value) =>
+                        setFormData({ ...formData, payment_method: value })
+                      }
+                      className="space-y-3"
+                    >
+                      <div className="flex items-center space-x-3 border rounded-lg p-3 hover:bg-accent transition-colors">
+                        <RadioGroupItem value="credit_card" id="credit_card" />
+                        <Label
+                          htmlFor="credit_card"
+                          className="flex items-center gap-2 cursor-pointer flex-1"
+                        >
+                          <CreditCard className="w-5 h-5" />
+                          <span>Carta di Credito/Debito</span>
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-3 border rounded-lg p-3 hover:bg-accent transition-colors">
+                        <RadioGroupItem value="paypal" id="paypal" />
+                        <Label
+                          htmlFor="paypal"
+                          className="flex items-center gap-2 cursor-pointer flex-1"
+                        >
+                          <Wallet className="w-5 h-5" />
+                          <span>PayPal</span>
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-3 border rounded-lg p-3 hover:bg-accent transition-colors">
+                        <RadioGroupItem value="google_pay" id="google_pay" />
+                        <Label
+                          htmlFor="google_pay"
+                          className="flex items-center gap-2 cursor-pointer flex-1"
+                        >
+                          <Wallet className="w-5 h-5" />
+                          <span>Google Pay</span>
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-3 border rounded-lg p-3 hover:bg-accent transition-colors">
+                        <RadioGroupItem value="bank_transfer" id="bank_transfer" />
+                        <Label
+                          htmlFor="bank_transfer"
+                          className="flex items-center gap-2 cursor-pointer flex-1"
+                        >
+                          <CreditCard className="w-5 h-5" />
+                          <span>Bonifico Bancario</span>
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                    <p className="text-sm text-muted-foreground">
+                      Il pagamento verrà processato dopo la conferma della disponibilità.
+                    </p>
                   </div>
 
                   <Button

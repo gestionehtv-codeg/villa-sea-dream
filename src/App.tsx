@@ -8,6 +8,8 @@ import Gallery from "./pages/Gallery";
 import Booking from "./pages/Booking";
 import Story from "./pages/Story";
 import Contact from "./pages/Contact";
+import Reviews from "./pages/Reviews";
+import SubmitReview from "./pages/SubmitReview";
 import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 
@@ -26,6 +28,8 @@ const App = () => (
           <Route path="/booking" element={<Booking />} />
           <Route path="/story" element={<Story />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/submit-review-secret" element={<SubmitReview />} />
           <Route path="/admin-secret-access" element={<AdminPanel />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
