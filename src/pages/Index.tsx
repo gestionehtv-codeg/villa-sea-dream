@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
+import { useSiteContent } from "@/hooks/useSiteContent";
 import villaHero from "@/assets/villa-hero.jpg";
 import villaPool from "@/assets/villa-pool.jpg";
 import villaInterior from "@/assets/villa-interior.jpg";
@@ -20,6 +21,7 @@ interface Service {
 
 const Index = () => {
   const [services, setServices] = useState<Service[]>([]);
+  const { getContent } = useSiteContent("home");
 
   useEffect(() => {
     fetchServices();
@@ -61,14 +63,14 @@ const Index = () => {
         
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6 text-background animate-fade-in">
-            Villa Mare
+            {getContent("hero_title", "Villa Mare")}
           </h1>
           <p className="text-xl md:text-2xl text-background/90 mb-8 animate-fade-in">
-            Il tuo paradiso privato sul Mediterraneo
+            {getContent("hero_subtitle", "Il tuo paradiso privato sul Mediterraneo")}
           </p>
           <Link to="/booking">
             <Button size="lg" className="gradient-sunset text-lg px-8 py-6 hover-lift">
-              Prenota il Tuo Soggiorno
+              {getContent("hero_button", "Prenota il Tuo Soggiorno")}
             </Button>
           </Link>
         </div>
@@ -78,7 +80,7 @@ const Index = () => {
       <section className="py-20 gradient-sand">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-serif font-bold text-center mb-12 text-primary">
-            Lusso & Comfort
+            {getContent("features_title", "Lusso & Comfort")}
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -106,7 +108,7 @@ const Index = () => {
       <section className="py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-serif font-bold text-center mb-12 text-primary">
-            Scopri la Villa
+            {getContent("gallery_title", "Scopri la Villa")}
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -129,7 +131,7 @@ const Index = () => {
           <div className="text-center">
             <Link to="/gallery">
               <Button variant="outline" size="lg" className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground">
-                Vedi Tutte le Foto
+                {getContent("gallery_button", "Vedi Tutte le Foto")}
               </Button>
             </Link>
           </div>
@@ -140,14 +142,14 @@ const Index = () => {
       <section className="py-20 gradient-ocean text-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-serif font-bold mb-6">
-            Pronto per la Tua Vacanza da Sogno?
+            {getContent("cta_title", "Pronto per la Tua Vacanza da Sogno?")}
           </h2>
           <p className="text-xl mb-8 text-background/90">
-            Prenota ora la tua villa esclusiva sul mare
+            {getContent("cta_subtitle", "Prenota ora la tua villa esclusiva sul mare")}
           </p>
           <Link to="/booking">
             <Button size="lg" variant="secondary" className="text-lg px-8 py-6 hover-lift">
-              Verifica Disponibilità
+              {getContent("cta_button", "Verifica Disponibilità")}
             </Button>
           </Link>
         </div>

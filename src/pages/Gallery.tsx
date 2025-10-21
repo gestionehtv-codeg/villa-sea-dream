@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
+import { useSiteContent } from "@/hooks/useSiteContent";
 import villaHero from "@/assets/villa-hero.jpg";
 import villaPool from "@/assets/villa-pool.jpg";
 import villaInterior from "@/assets/villa-interior.jpg";
@@ -18,6 +19,7 @@ interface GalleryImage {
 
 const Gallery = () => {
   const [images, setImages] = useState<GalleryImage[]>([]);
+  const { getContent } = useSiteContent("gallery");
 
   const defaultImages = [
     { id: "1", image_url: villaHero, title: "Vista Principale", description: "La villa con piscina infinity" },
@@ -59,10 +61,10 @@ const Gallery = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-primary">
-              Galleria Fotografica
+              {getContent("page_title", "Galleria Fotografica")}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Esplora ogni angolo della nostra villa di lusso sul mare
+              {getContent("page_subtitle", "Esplora ogni angolo della nostra villa di lusso sul mare")}
             </p>
           </div>
 
@@ -93,32 +95,32 @@ const Gallery = () => {
 
           <div className="mt-16 p-8 rounded-lg gradient-sand shadow-luxury">
             <h2 className="text-2xl font-serif font-bold mb-4 text-primary text-center">
-              Caratteristiche della Villa
+              {getContent("features_title", "Caratteristiche della Villa")}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-secondary mb-2">5</div>
-                <div className="text-muted-foreground">Camere da Letto</div>
+                <div className="text-3xl font-bold text-secondary mb-2">{getContent("bedrooms", "5")}</div>
+                <div className="text-muted-foreground">{getContent("bedrooms_label", "Camere da Letto")}</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-secondary mb-2">4</div>
-                <div className="text-muted-foreground">Bagni</div>
+                <div className="text-3xl font-bold text-secondary mb-2">{getContent("bathrooms", "4")}</div>
+                <div className="text-muted-foreground">{getContent("bathrooms_label", "Bagni")}</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-secondary mb-2">300m²</div>
-                <div className="text-muted-foreground">Superficie</div>
+                <div className="text-3xl font-bold text-secondary mb-2">{getContent("surface", "300m²")}</div>
+                <div className="text-muted-foreground">{getContent("surface_label", "Superficie")}</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-secondary mb-2">12</div>
-                <div className="text-muted-foreground">Ospiti Max</div>
+                <div className="text-3xl font-bold text-secondary mb-2">{getContent("max_guests", "12")}</div>
+                <div className="text-muted-foreground">{getContent("max_guests_label", "Ospiti Max")}</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-secondary mb-2">∞</div>
-                <div className="text-muted-foreground">Piscina Infinity</div>
+                <div className="text-3xl font-bold text-secondary mb-2">{getContent("pool", "∞")}</div>
+                <div className="text-muted-foreground">{getContent("pool_label", "Piscina Infinity")}</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-secondary mb-2">100m</div>
-                <div className="text-muted-foreground">Dalla Spiaggia</div>
+                <div className="text-3xl font-bold text-secondary mb-2">{getContent("beach_distance", "100m")}</div>
+                <div className="text-muted-foreground">{getContent("beach_distance_label", "Dalla Spiaggia")}</div>
               </div>
             </div>
           </div>
